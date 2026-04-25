@@ -1,0 +1,33 @@
+{
+  "security": {
+    "token": "abc123",
+    "expires": "2027-12-31"
+  },
+  "block_mode": false,
+  "block_packages": [
+    "com.fake.cloned.app"
+  ],
+  "media": [
+    {
+      "type": "image",
+      "url": "https://kdptifcdlxtagcewazjt.supabase.co/functions/v1/download/c2fd5447-24cb-4d22-a624-6a28a6a448a9/1777141445310_1000194165.png",
+      "click": "https://play.google.com/store/apps/details?id=com.example",
+      "close_after": 5,
+      "show_close_btn": true
+    },
+    {
+      "type": "video",
+      "url": "https://kdptifcdlxtagcewazjt.supabase.co/functions/v1/download/c2fd5447-24cb-4d22-a624-6a28a6a448a9/1777123226973_1000177010.mp4",
+      "click": "https://yourwebsite.com",
+      "close_after": 10,
+      "show_close_btn": false
+    },
+    {
+      "type": "gif",
+      "url": "https://media0.giphy.com/media/v1.Y2lkPTZjMDliOTUyZjN5ajV3M3QzN2pnb3MxZjRsZ3Y5NXVqOGdwZ3R0Mm94amN2Z3I0ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IRFQYGCokErS0/giphy.gif",
+      "click": "https://yourwebsite.com/offer",
+      "close_after": 6,
+      "show_close_btn": true
+    }
+  ]
+}
