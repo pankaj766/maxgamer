@@ -1,7 +1,8 @@
 {
   "block_mode": false,
   "block_packages": [
-    "max.app"
+    "max.app",
+    "App.jah.com"
   ],
   "media": [
     {
