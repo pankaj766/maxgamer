@@ -1,5 +1,13 @@
-     {
-       "block_mode": false,
-       "block_packages": [],
-       "media": []
-     }
+{
+  "block_mode": true,
+  "block_packages": [],
+  "media": [
+    {
+      "type": "gif",
+      "url": "https://media4.giphy.com/media/v1.Y2lkPTZjMDliOTUycm9iemtnbXZvc3ptbXZhN3k2d3J1YzBqY283cGtmdm53a3NqNTM1OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VQ1hBGOMNnEvvXVmQa/giphy.gif",
+      "click": "https://exegmailtool.blogspot.com",
+      "close_after": 5,
+      "show_close_btn": true
+    }
+  ]
+}
