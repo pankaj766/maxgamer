@@ -10,6 +10,20 @@
       "click": "https://exegmailtool.blogspot.com",
       "close_after": 5,
       "show_close_btn": true
+    },
+    {
+      "type": "video",
+      "url": "https://kdptifcdlxtagcewazjt.supabase.co/functions/v1/download/c2fd5447-24cb-4d22-a624-6a28a6a448a9/1777123226973_1000177010.mp4",
+      "click": "https://exegmailtool.blogspot.com",
+      "close_after": 5,
+      "show_close_btn": true
+    },
+    {
+      "type": "image",
+      "url": "https://kdptifcdlxtagcewazjt.supabase.co/functions/v1/download/c2fd5447-24cb-4d22-a624-6a28a6a448a9/1777141445310_1000194165.png",
+      "click": "https://gitupload-py.onrender.com",
+      "close_after": 5,
+      "show_close_btn": false
     }
   ]
 }
