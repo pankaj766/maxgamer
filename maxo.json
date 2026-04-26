@@ -1,5 +1,5 @@
 {
-  "block_mode": true,
+  "block_mode": false,
   "block_packages": [
     "max.app"
   ],
