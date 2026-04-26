@@ -1,6 +1,8 @@
 {
   "block_mode": true,
-  "block_packages": [],
+  "block_packages": [
+    "max.app"
+  ],
   "media": [
     {
       "type": "gif",
