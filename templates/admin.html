@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — NEXUS | VIP DARK GOD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/static/nexus.css" />
+  <style>
+    .admin-card {
+      background: rgba(17,24,39,0.6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .admin-card-title {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 700; margin-bottom: 18px;
+      color: var(--accent);
+    }
+    .admin-card-title i { font-size: 18px; }
+    .form-row {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .form-row input.med { width: 160px; }
+    .form-row input.small { width: 80px; }
+    .user-item {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 10px;
+      transition: var(--transition);
+    }
+    .user-item:hover { border-color: rgba(255,255,255,0.10); }
+    .user-item.expired { border-left: 3px solid var(--danger); }
+    .user-item.active { border-left: 3px solid var(--success); }
+    .user-name { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .user-meta { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0 10px; font-size: 11px; color: var(--text-secondary); }
+    .user-meta span { display: flex; align-items: center; gap: 4px; }
+    .user-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .tag {
+      background: rgba(0,212,255,0.07);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      border: 1px solid rgba(0,212,255,0.12);
+    }
+    .badge-expired { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .badge-active { background: rgba(16,185,129,0.15); color: var(--success); }
+    .badge-lifetime { background: rgba(156,163,175,0.10); color: var(--text-muted); }
+    .badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .user-expiry-badge {
+      font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .user-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .user-actions form { display: flex; gap: 6px; align-items: center; }
+    .user-actions input[type="text"], .user-actions input[type="number"] {
+      padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: rgba(0,0,0,0.3); color: var(--text); font-size: 12px; width: 90px;
+    }
+    .user-actions input[type="number"] { width: 60px; }
+    @media (max-width: 600px) {
+      .header { flex-direction: column; gap: 12px; align-items: stretch; }
+      .admin-card { padding: 16px; }
+      .form-row input.med { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="logo"><i class="fa-solid fa-shield-halved"></i></div>
+    <div>
+      <span>Admin Root</span>
+      <div style="font-size:10px;color:var(--text-muted);font-weight:400">VIP DARK GOD — Nexus Control</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="/admin/cleanup" class="btn-icon" title="Cleanup orphans"><i class="fa-solid fa-broom"></i></a>
+    <a href="/" class="btn-icon" title="Dashboard"><i class="fa-solid fa-gauge"></i></a>
+    <a href="/logout" class="btn-icon" title="Logout" style="color:var(--danger)"><i class="fa-solid fa-power-off"></i></a>
+  </div>
+</div>
+
+<div class="main">
+<div class="main-content" style="padding-top:88px">
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px">
+    <div class="stat-card">
+      <div class="icon"><i class="fa-solid fa-users"></i></div>
+      <div class="value">{{ users|length }}</div>
+      <div class="label">Total Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon" style="color:var(--success)"><i class="fa-solid fa-rocket"></i></div>
+      <div class="value" style="color:var(--success)">{{ start_times|length }}</div>
+      <div class="label">Active Sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon" style="color:var(--accent-purple)"><i class="fa-solid fa-microchip"></i></div>
+      <div class="value" style="color:var(--accent-purple)">{{ total_bots }}</div>
+      <div class="label">Running Bots</div>
+    </div>
+  </div>
+
+  <!-- Default Password -->
+  <div class="admin-card">
+    <div class="admin-card-title"><i class="fa-solid fa-key"></i> Default Password</div>
+    <form action="/admin/global_pw" method="post" class="form-row">
+      <input type="text" name="global_pw" class="input" style="flex:1;min-width:200px" value="{{ global_pw }}" />
+      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Update</button>
+    </form>
+  </div>
+
+  <!-- Create User -->
+  <div class="admin-card">
+    <div class="admin-card-title"><i class="fa-solid fa-user-plus"></i> Create New User</div>
+    <form action="/admin/add_user" method="post" class="form-row">
+      <input class="input" style="width:160px" type="text" name="username" placeholder="Username" required />
+      <input class="input" style="width:160px" type="text" name="password" placeholder="Password" required />
+      <input class="input" style="width:80px" type="number" name="days" placeholder="Days" value="0" min="0" />
+      <span style="font-size:12px;color:var(--text-muted)">(0 = unlimited)</span>
+      <button type="submit" class="btn btn-primary" style="background:var(--gradient-success);box-shadow:none"><i class="fa-solid fa-plus"></i> Create</button>
+    </form>
+  </div>
+
+  <!-- Bulk Create -->
+  <div class="admin-card">
+    <div class="admin-card-title"><i class="fa-solid fa-users-gear"></i> Bulk Create Users</div>
+    <form action="/admin/bulk_create" method="post">
+      <div style="margin-bottom:12px">
+        <textarea name="bulk" class="input" style="min-height:120px;font-family:var(--font-mono);font-size:12px" placeholder="username1 password1 30&#10;username2 password2 7&#10;username3&#10;(one per line: username password days)"></textarea>
+      </div>
+      <div class="form-row">
+        <input class="input" style="width:80px" type="number" name="days" placeholder="Default days" value="7" min="0" />
+        <span style="font-size:12px;color:var(--text-muted)">Default expiry (0 = unlimited, overridable per line)</span>
+        <button type="submit" class="btn btn-primary" style="background:var(--gradient-success);box-shadow:none"><i class="fa-solid fa-layer-group"></i> Create All</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- User Management -->
+  <div class="admin-card">
+    <div class="admin-card-title" style="justify-content:space-between">
+      <span><i class="fa-solid fa-user-gear"></i> User Management</span>
+      <span style="font-size:12px;font-weight:400;color:var(--text-muted)">{{ users|length }} user(s)</span>
+    </div>
+    {% if users %}
+      {% for u_name, u_pw in users.items() %}
+      {% set info = expiry_info.get(u_name) %}
+      <div class="user-item {{ 'expired' if info and info.expired else 'active' }}">
+        <div class="user-name" style="color:var(--accent)">
+          <i class="fa-solid fa-circle-user" style="color:var(--accent)"></i>{{ u_name }}
+          {% if info %}
+            {% if info.expired %}
+              <span class="user-expiry-badge badge-expired"><i class="fa-regular fa-clock"></i> Expired</span>
+            {% elif info.remaining_days <= 3 %}
+              <span class="user-expiry-badge badge-warning"><i class="fa-regular fa-clock"></i> {{ info.remaining_days }}d left</span>
+            {% else %}
+              <span class="user-expiry-badge badge-active"><i class="fa-regular fa-clock"></i> {{ info.remaining_days }}d left</span>
+            {% endif %}
+          {% else %}
+            <span class="user-expiry-badge badge-lifetime"><i class="fa-regular fa-infinity"></i> Unlimited</span>
+          {% endif %}
+        </div>
+        <div class="user-tags">
+          {% set ns = namespace(count=0) %}
+          {% for p_key in start_times.keys() %}
+            {% if p_key.startswith(u_name ~ '_') %}
+              {% set p_name = p_key.split('_', 1)[1] %}
+              <span class="tag">&#9679; {{ p_name }}</span>
+              {% set ns.count = ns.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {% if ns.count == 0 %}
+            <span style="color:var(--text-muted);font-size:11px;">No active bots</span>
+          {% endif %}
+        </div>
+        <div class="user-meta">
+          <span><i class="fa-regular fa-calendar"></i> Created: {% if user_created.get(u_name) %}<span class="fmt-date" data-ts="{{ user_created.get(u_name) }}">{{ user_created.get(u_name) }}</span>{% else %}N/A{% endif %}</span>
+          {% if user_last_login.get(u_name) %}
+          <span><i class="fa-regular fa-clock"></i> Last login: <span class="fmt-date" data-ts="{{ user_last_login.get(u_name) }}">{{ user_last_login.get(u_name) }}</span></span>
+          {% endif %}
+          {% if user_disk and user_disk.get(u_name) is not none %}
+          <span><i class="fa-regular fa-hard-drive"></i> {% set d = user_disk.get(u_name) %}{% if d < 1024 %}{{ d }}B{% elif d < 1048576 %}{{ (d/1024)|round(1) }}K{% elif d < 1073741824 %}{{ (d/1048576)|round(1) }}M{% else %}{{ (d/1073741824)|round(1) }}G{% endif %}</span>
+          {% endif %}
+          {% if info %}
+            {% if info.expired %}
+              <span style="color:var(--danger)"><i class="fa-regular fa-circle-exclamation"></i> Expired</span>
+            {% else %}
+              <span><i class="fa-regular fa-hourglass-half"></i> {{ info.remaining_hours }}h remaining</span>
+            {% endif %}
+          {% endif %}
+        </div>
+        <div class="user-actions">
+          <form action="/admin/change_pw" method="post">
+            <input type="hidden" name="username" value="{{ u_name }}" />
+            <input type="text" name="new_pw" value="{{ u_pw }}" style="width:80px" />
+            <button type="submit" class="btn btn-sm btn-primary" style="box-shadow:none"><i class="fa-solid fa-save"></i></button>
+          </form>
+          <form action="/admin/extend_user" method="post" style="display:flex;gap:4px;">
+            <input type="hidden" name="username" value="{{ u_name }}" />
+            <input type="number" name="days" placeholder="Days" value="7" min="1" style="width:60px;padding:6px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--text);font-size:12px;" />
+            <button type="submit" class="btn btn-sm btn-primary" style="box-shadow:none"><i class="fa-solid fa-plus"></i></button>
+          </form>
+          <a href="/admin/login_as/{{ u_name }}" class="btn btn-sm btn-primary" style="background:var(--gradient);box-shadow:none"><i class="fa-solid fa-sign-in-alt"></i> Masq</a>
+          <a href="/admin/ban/{{ u_name }}" class="btn btn-sm btn-ghost" style="background:rgba(236,72,153,0.15);color:var(--accent-magenta);border-color:rgba(236,72,153,0.2)" onclick="return confirm('Ban {{ u_name }} & remove all bots?')"><i class="fa-solid fa-ban"></i> Ban</a>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:13px">
+        <i class="fa-solid fa-inbox" style="font-size:24px;margin-bottom:8px;opacity:0.5"></i><br />No users registered yet.
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="text-align:center;margin-top:48px;padding:20px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border)">
+    <strong style="color:var(--accent)">VIP DARK GOD</strong> &middot;
+    <a href="https://t.me/VIP_DARK_GOD" target="_blank" style="color:var(--accent)">@VIP_DARK_GOD</a>
+    &middot; Nexus Panel PRO
+  </div>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('.fmt-date').forEach(function(el) {
+  var ts = parseInt(el.getAttribute('data-ts'));
+  if (ts) {
+    var d = new Date(ts);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    el.textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ' ' +
+      ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+  }
+});
+</script>
+</body>
+</html>
